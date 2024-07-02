@@ -2,10 +2,13 @@ package main
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/Anwarjondev/blog-website-clone/config"
+	"github.com/Anwarjondev/blog-website-clone/server"
+	"github.com/Anwarjondev/blog-website-clone/storage"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"log"
 )
 
 func main() {
@@ -24,5 +27,11 @@ func main() {
 	}
 
 	log.Println("Successfully connected to the database!")
-	_ = db
+	strg := storage.NewStorage(db)
+	router := server.NewServer(&server.Options{
+		Strg: strg,
+	})
+	if err = router.Run(cfg.Port); err != nil {
+		log.Fatalf("Failed to connect to server[%v]: %v", cfg.Port, err)
+	}
 }

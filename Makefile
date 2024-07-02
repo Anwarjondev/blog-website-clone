@@ -1,4 +1,4 @@
-.PHONY: run tidy migration migrateup migratedown
+.PHONY: run tidy migration migrateup migratedown force
 
 -include .env
 
@@ -21,3 +21,6 @@ migrateup:
 
 migratedown:
 	@migrate -path ./migrations -database "$(DB_URL)" -verbose down
+
+force:
+	@migrate -path ./migrations -database "$(DB_URL)" -verbose force $(version)

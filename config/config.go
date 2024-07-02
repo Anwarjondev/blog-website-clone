@@ -7,6 +7,7 @@ import (
 )
 
 type Config struct {
+	Port     string
 	Postgres Postgres
 }
 
@@ -23,16 +24,18 @@ func Load(path string) Config {
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
+	conf := viper.New()
 
-	viper.AutomaticEnv()
+	conf.AutomaticEnv()
 
 	cfg := Config{
+		Port: conf.GetString("PORT"),
 		Postgres: Postgres{
-			Host:     viper.GetString("POSTGRES_HOST"),
-			Port:     viper.GetString("POSTGRES_PORT"),
-			User:     viper.GetString("POSTGRES_USER"),
-			Password: viper.GetString("POSTGRES_PASSWORD"),
-			Database: viper.GetString("POSTGRES_DATABASE"),
+			Host:     conf.GetString("POSTGRES_HOST"),
+			Port:     conf.GetString("POSTGRES_PORT"),
+			User:     conf.GetString("POSTGRES_USER"),
+			Password: conf.GetString("POSTGRES_PASSWORD"),
+			Database: conf.GetString("POSTGRES_DATABASE"),
 		},
 	}
 	return cfg
